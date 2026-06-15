@@ -32,17 +32,15 @@ print(emb.shape)
 df["embedding"] = ["[" + ",".join(map(str, v)) + "]" for v in emb]
 
 with engine.begin() as conn:
-    conn.execute(text("CREATE TEMP TABLE emb_staging (job_id text, embedding vector(384));"))
     conn.execute(
-        text("INSERT INTO emb_staging VALUES (:job_id, :embedding)"),
-        df[["job_id", "embedding"]].to_dict("records"),
-    )
-    conn.execute(text("""
+    text("""
         INSERT INTO job_embeddings (job_id, embedding)
-        SELECT job_id, embedding FROM emb_staging
-        ON CONFLICT (job_id) DO UPDATE SET embedding = EXCLUDED.embedding;
-    """))
-
+        VALUES (:job_id, :embedding)
+        ON CONFLICT (job_id) DO UPDATE SET embedding = EXCLUDED.embedding
+    """),
+    df[["job_id", "embedding"]].to_dict("records"),
+)
+    
 #testing 
 q = pd.read_sql(text("""
     WITH target AS (SELECT embedding FROM job_embeddings WHERE job_id = :id)
