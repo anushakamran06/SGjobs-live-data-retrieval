@@ -42,15 +42,15 @@ print(f"extracted {len(pairs)} job-skill pairs across {pairs['job_id'].nunique()
 
 
 #dealing with upsert logic 
-with engine.begin() as conn:  # begin() = one transaction, auto-commit at the end
-    pairs.to_sql("job_skills_staging", conn, if_exists="replace", index=False)
-    conn.execute(text("""
-        INSERT INTO job_skills (job_id, skill)
-        SELECT job_id, skill FROM job_skills_staging
-        ON CONFLICT (job_id, skill) DO NOTHING;
-    """))
-    conn.execute(text("DROP TABLE job_skills_staging;"))
-
+with engine.begin() as conn:
+    conn.execute(
+        text("""
+            INSERT INTO job_embeddings (job_id, embedding)
+            VALUES (:job_id, :embedding)
+            ON CONFLICT (job_id) DO UPDATE SET embedding = EXCLUDED.embedding
+        """),
+        df[["job_id", "embedding"]].to_dict("records"),
+    )
 #coverage check (the TODO from EDA): what fraction of jobs matched >=1 skill?
 covered = pairs["job_id"].nunique()
 total = len(df)
