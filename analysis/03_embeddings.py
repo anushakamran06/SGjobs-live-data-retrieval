@@ -40,16 +40,3 @@ with engine.begin() as conn:
     """),
     df[["job_id", "embedding"]].to_dict("records"),
 )
-    
-#testing 
-q = pd.read_sql(text("""
-    WITH target AS (SELECT embedding FROM job_embeddings WHERE job_id = :id)
-    SELECT jobs.job_id, jobs.job_title,
-           1 - (job_embeddings.embedding <=> (SELECT embedding FROM target)) AS cosine_sim
-    FROM job_embeddings
-    JOIN jobs USING (job_id), target
-    WHERE job_embeddings.job_id <> :id
-    ORDER BY job_embeddings.embedding <=> (SELECT embedding FROM target)
-    LIMIT 5
-"""), engine, params={"id": "PUT_A_REAL_JOB_ID"})
-print(q)
