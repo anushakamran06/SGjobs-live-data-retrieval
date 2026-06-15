@@ -30,13 +30,15 @@ def retrieve(job_id, k=20):
         .str.replace(HTML, " ", regex=True)
     return df
 
+
 def query_text(job_id):
-    row = pd.read_sql(
+    df = pd.read_sql(
         text("SELECT job_title, job_description FROM jobs WHERE job_id = :id"),
         engine, params={"id": job_id},
-    ).iloc[0]
-    return clean(row.job_title) + " " + clean(row.job_description)
-
+    )
+    return (df.job_title.fillna("") + " " + df.job_description.fillna("")) \
+        .str.replace(HTML, " ", regex=True).iloc[0]
+ 
  #cross encoder reranker
 def recommend(job_id, k_retrieve=20, k_final=5):
     cands = retrieve(job_id, k_retrieve)
