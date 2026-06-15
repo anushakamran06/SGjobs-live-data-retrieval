@@ -2,7 +2,8 @@ import os
 import pandas as pd
 from sqlalchemy import create_engine 
 from dotenv import load_dotenv
-import seaborn as snsimport matplotlib as plt
+import seaborn as sns 
+import matplotlib.pyplot as plt
  
 load_dotenv()  
 engine = create_engine(os.environ["DATABASE_URL"]) 
