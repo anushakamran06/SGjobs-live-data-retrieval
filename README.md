@@ -1,4 +1,4 @@
-# job-listings-live-data: live ETL & sSemantic retrieval
+# job-listings-live-data: live ETL & semantic retrieval
 
 A live, incremental ETL pipeline over a daily-mutating feed of ~2.6k Singapore
 government job postings
