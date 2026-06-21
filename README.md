@@ -1,4 +1,4 @@
-# job-listings-live-data: live ETL & semantic retrieval
+# job-listings-live-data
 
 A live, incremental ETL pipeline over a daily-mutating feed of ~2.6k Singapore
 government job postings
@@ -11,12 +11,6 @@ lexicon-based skill extraction for a first tier. Second tier carries out semanti
 embeddings indexed in pgvector for job-to-job retrieval. The vector-search half is the
 same retrieval primitive that underpins RAG, used here standalone for recommendation
 (no generation step), kept deliberately lightweight at this scale.
-
-**Techniques:** EDA · lexicon-based NLP (spaCy PhraseMatcher) · sentence-transformers
-(MiniLM-L6, 384-d) · pgvector cosine KNN retrieval · exact-match vs semantic-match
-skill matching · bi-encoder vs cross-encoder reranking, evaluated against a
-field-overlap precision@k proxy → reranking dropped (net-negative on precision and
-added per-query latency view test.py for more detail), retaining a lightweight bi-encoder retrieval system.
 
 ## Repository Layout
 
