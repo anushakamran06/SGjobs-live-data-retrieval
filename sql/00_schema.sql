@@ -49,7 +49,7 @@ CREATE INDEX IF NOT EXISTS idx_jobs_closing  ON jobs (closing_date);
 CREATE INDEX IF NOT EXISTS idx_jobs_desc_fts ON jobs
     USING gin (to_tsvector('english', coalesce(job_description, '')));
 
-DROP VIEW IF EXISTS v_jobs_clean;
+DROP VIEW IF EXISTS v_jobs_clean CASCADE;
 
 CREATE VIEW v_jobs_clean AS
 SELECT
